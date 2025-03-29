@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoodExpress</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #ea1d2c;
+        --primary-dark: #d41824;
+        --primary-light: #ff4b5a;
+        --success: #50a773;
+        --success-hover: #3d8054;
+        --danger: #ea1d2c;
+        --danger-hover: #d41824;
+        --background: #f7f7f7;
+        --card: #ffffff;
+        --text: #1a1a1a;
+        --text-secondary: #717171;
+        --border: #e8e8e8;
+        --star: #ffd700;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--background);
+        color: var(--text);
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+
+      header {
+        background: var(--card);
+        padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1rem;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo {
+        color: var(--primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .search-container {
+        flex: 1;
+        max-width: 600px;
+        position: relative;
+      }
+
+      .search-bar {
+        width: 100%;
+        background: var(--background);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+      }
+
+      .search-bar:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(234, 29, 44, 0.1);
+      }
+
+      .categories {
+        background: var(--card);
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .categories-list {
+        display: flex;
+        gap: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        list-style: none;
+      }
+
+      .category {
+        flex: 0 0 auto;
+        padding: 0.5rem 1rem;
+        background: var(--background);
+        border-radius: 100px;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .category.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .view-options {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .produtos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .produto {
+        background: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        position: relative;
+      }
+
+      .produto:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .produto img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+      }
+
+      .favorite-btn {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        background: white;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+      }
+
+      .favorite-btn.active {
+        color: var(--primary);
+      }
+
+      .produto-content {
+        padding: 1rem;
+      }
+
+      .produto h2 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        text-transform: capitalize;
+      }
+
+      .produto-info {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .stars {
+        color: var(--star);
+        font-size: 0.875rem;
+      }
+
+      .rating-count {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+      }
+
+      .produto-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+      }
+
+      .preco {
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .preco-original {
+        text-decoration: line-through;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+      }
+
+      .desconto {
+        color: var(--success);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .botao-adicionar {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .botao-adicionar:hover {
+        background: var(--primary-dark);
+      }
+
+      .botao-adicionar:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      .carrinho-flutuante {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--primary);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(234, 29, 44, 0.2);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .carrinho-flutuante:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      .carrinho-contador {
+        background: white;
+        color: var(--primary);
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+
+      .carrinho-total {
+        font-weight: 500;
+      }
+
+      .status-container {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        width: 90%;
+        max-width: 400px;
+      }
+
+      #status {
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: var(--card);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(100%);
+      }
+
+      #status.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #status.sucesso {
+        background: var(--success);
+        color: white;
+      }
+
+      #status.erro {
+        background: var(--danger);
+        color: white;
+      }
+
+      .loading {
+        position: relative;
+        pointer-events: none;
+      }
+
+      .loading::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .header-left {
+          width: 100%;
+        }
+
+        .header-right {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .search-container {
+          max-width: 100%;
+        }
+
+        .produtos-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .carrinho-flutuante {
+          bottom: 1rem;
+          right: 1rem;
+          left: 1rem;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div class="header-left">
+          <a href="#" class="logo">🍽️ FoodExpress</a>
+          <div class="search-container">
+            <input
+              type="text"
+              class="search-bar"
+              id="searchInput"
+              placeholder="Buscar produtos..."
+            />
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="favoritosBtn" class="category">❤️ Favoritos</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="categories">
+      <ul class="categories-list">
+        <li class="category active" data-category="todos">Todos</li>
+        <li class="category" data-category="mercearia">Mercearia</li>
+        <li class="category" data-category="bebidas">Bebidas</li>
+        <li class="category" data-category="hortifruti">Hortifruti</li>
+        <li class="category" data-category="padaria">Padaria</li>
+        <li class="category" data-category="carnes">Carnes</li>
+        <li class="category" data-category="limpeza">Limpeza</li>
+      </ul>
+    </nav>
+
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Produtos Populares</h2>
+        <div class="view-options">
+          <button class="category" id="ordernarPreco">Ordenar por preço</button>
+          <button class="category" id="ordernarAvaliacao">
+            Mais bem avaliados
+          </button>
+        </div>
+      </div>
+      <div class="produtos-grid" id="produtos"></div>
+      <div class="status-container">
+        <div id="status"></div>
+      </div>
+    </div>
+
+    <div class="carrinho-flutuante" id="carrinho">
+      <span class="carrinho-contador">0</span>
+      <span>Carrinho</span>
+      <span class="carrinho-total">R$ 0,00</span>
+    </div>
+
+    <!-- Carrinho Modal -->
+    <div
+      id="carrinho-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          border-radius: 12px;
+          max-width: 500px;
+          width: 90%;
+          padding: 2rem;
+          position: relative;
+        "
+      >
+        <button
+          onclick="fecharCarrinho()"
+          style="
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+          "
+        >
+          ✖️
+        </button>
+        <h2 style="margin-bottom: 1rem; font-size: 1.25rem">
+          🛒 Itens no Carrinho
+        </h2>
+        <div
+          id="lista-carrinho"
+          style="max-height: 300px; overflow: auto"
+        ></div>
+        <div style="margin-top: 1rem; font-weight: 600; font-size: 1.1rem">
+          Total: <span id="carrinho-modal-total">R$ 0,00</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const carrinhoId = "123";
+      const backendUrl = "http://localhost:8000";
+
+      const produtos = [
+        {
+          nome: "Arroz Premium",
+          img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          descricao: "Arroz premium, grãos selecionados",
+          preco: 22.9,
+          precoOriginal: 25.9,
+          categoria: "mercearia",
+          avaliacao: 4.8,
+          avaliacoes: 156,
+        },
+        {
+          nome: "Feijão Carioca",
+          img: "https://plus.unsplash.com/premium_photo-1726072397905-f398308c564e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          descricao: "Feijão carioca tipo 1",
+          preco: 8.9,
+          categoria: "mercearia",
+          avaliacao: 4.5,
+          avaliacoes: 89,
+        },
+        {
+          nome: "Coca-Cola 2L",
+          img: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          descricao: "Refrigerante Coca-Cola 2 litros",
+          preco: 8.99,
+          precoOriginal: 10.9,
+          categoria: "bebidas",
+          avaliacao: 4.9,
+          avaliacoes: 203,
+        },
+        {
+          nome: "Banana Prata",
+          img: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          descricao: "Banana prata orgânica (kg)",
+          preco: 5.99,
+          categoria: "hortifruti",
+          avaliacao: 4.6,
+          avaliacoes: 67,
+        },
+        {
+          nome: "Pão Francês",
+          img: "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          descricao: "Pão francês fresquinho (kg)",
+          preco: 12.9,
+          categoria: "padaria",
+          avaliacao: 4.7,
+          avaliacoes: 128,
+        },
+        {
+          nome: "Contra Filé",
+          img: "https://plus.unsplash.com/premium_photo-1668616816933-f3874102f54b?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          descricao: "Contra filé bovino (kg)",
+          preco: 49.9,
+          precoOriginal: 59.9,
+          categoria: "carnes",
+          avaliacao: 4.8,
+          avaliacoes: 94,
+        },
+      ];
+
+      let carrinhoItems = [];
+      let favoritos = new Set();
+      let produtosFiltrados = [...produtos];
+      const produtosDiv = document.getElementById("produtos");
+      const statusDiv = document.getElementById("status");
+      const carrinhoContador = document.querySelector(".carrinho-contador");
+      const carrinhoTotal = document.querySelector(".carrinho-total");
+      let activeTimeout;
+
+      function atualizarCarrinho() {
+        carrinhoContador.textContent = carrinhoItems.length;
+        const total = carrinhoItems.reduce((sum, item) => sum + item.preco, 0);
+        carrinhoTotal.textContent = `R$ ${total.toFixed(2)}`;
+      }
+
+      function toggleFavorito(nome) {
+        if (favoritos.has(nome)) {
+          favoritos.delete(nome);
+        } else {
+          favoritos.add(nome);
+        }
+        renderizarProdutos();
+      }
+
+      function filtrarProdutos(categoria) {
+        if (categoria === "todos") {
+          produtosFiltrados = [...produtos];
+        } else {
+          produtosFiltrados = produtos.filter((p) => p.categoria === categoria);
+        }
+        renderizarProdutos();
+      }
+
+      function pesquisarProdutos(termo) {
+        if (!termo) {
+          produtosFiltrados = [...produtos];
+        } else {
+          termo = termo.toLowerCase();
+          produtosFiltrados = produtos.filter(
+            (p) =>
+              p.nome.toLowerCase().includes(termo) ||
+              p.descricao.toLowerCase().includes(termo)
+          );
+        }
+        renderizarProdutos();
+      }
+
+      function ordenarPorPreco() {
+        produtosFiltrados.sort((a, b) => a.preco - b.preco);
+        renderizarProdutos();
+      }
+
+      function ordenarPorAvaliacao() {
+        produtosFiltrados.sort((a, b) => b.avaliacao - a.avaliacao);
+        renderizarProdutos();
+      }
+
+      function mostrarFavoritos() {
+        produtosFiltrados = produtos.filter((p) => favoritos.has(p.nome));
+        renderizarProdutos();
+      }
+
+      function renderizarEstrelas(avaliacao) {
+        const estrelas =
+          "★".repeat(Math.floor(avaliacao)) +
+          "☆".repeat(5 - Math.floor(avaliacao));
+        return `<div class="stars">${estrelas}</div>`;
+      }
+
+      function renderizarProdutos() {
+        produtosDiv.innerHTML = produtosFiltrados.length
+          ? produtosFiltrados
+              .map(
+                (prod) => `
+          <div class="produto">
+            <img src="${prod.img}" alt="${prod.nome}">
+            <button class="favorite-btn ${
+              favoritos.has(prod.nome) ? "active" : ""
+            }" 
+                    onclick="toggleFavorito('${prod.nome}')">
+              ${favoritos.has(prod.nome) ? "❤️" : "🤍"}
+            </button>
+            <div class="produto-content">
+              <h2>${prod.nome}</h2>
+              <div class="produto-info">${prod.descricao}</div>
+              <div class="rating">
+                ${renderizarEstrelas(prod.avaliacao)}
+                <span class="rating-count">${prod.avaliacao} (${
+                  prod.avaliacoes
+                })</span>
+              </div>
+              <div class="produto-footer">
+                <div>
+                  ${
+                    prod.precoOriginal
+                      ? `
+                    <span class="preco-original">R$ ${prod.precoOriginal.toFixed(
+                      2
+                    )}</span>
+                    <span class="desconto">-${Math.round(
+                      (1 - prod.preco / prod.precoOriginal) * 100
+                    )}%</span>
+                  `
+                      : ""
+                  }
+                  <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
+                </div>
+                <button class="botao-adicionar" onclick="enviarAcao('${
+                  prod.nome
+                }', 'adicionar')">
+                  🛒 Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+              )
+              .join("")
+          : '<div class="empty-state">Nenhum produto encontrado</div>';
+      }
+
+      // Event Listeners
+      document.querySelectorAll(".category[data-category]").forEach((cat) => {
+        cat.addEventListener("click", () => {
+          document.querySelector(".category.active").classList.remove("active");
+          cat.classList.add("active");
+          filtrarProdutos(cat.dataset.category);
+        });
+      });
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        pesquisarProdutos(e.target.value);
+      });
+
+      document
+        .getElementById("ordernarPreco")
+        .addEventListener("click", ordenarPorPreco);
+      document
+        .getElementById("ordernarAvaliacao")
+        .addEventListener("click", ordenarPorAvaliacao);
+      document
+        .getElementById("favoritosBtn")
+        .addEventListener("click", mostrarFavoritos);
+
+      const carrinhoModal = document.getElementById("carrinho-modal");
+      const listaCarrinho = document.getElementById("lista-carrinho");
+      const totalCarrinhoModal = document.getElementById(
+        "carrinho-modal-total"
+      );
+
+      function abrirCarrinho() {
+        renderizarCarrinhoModal();
+        carrinhoModal.style.display = "flex";
+      }
+
+      function fecharCarrinho() {
+        carrinhoModal.style.display = "none";
+      }
+
+      async function alterarQuantidade(nome, delta) {
+        const acao = delta === 1 ? "adicionar" : "remover";
+
+        try {
+          const res = await fetch(
+            `${backendUrl}/carrinho/${carrinhoId}/produto`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ nome, acao }),
+            }
+          );
+
+          const dados = await res.json();
+
+          if (dados.status === "confirmado") {
+            if (acao === "adicionar") {
+              const item = produtos.find((p) => p.nome === nome);
+              if (item) {
+                carrinhoItems.push(item);
+                setStatus(`✔️ ${nome} adicionado!`, "sucesso");
+              }
+            } else {
+              const index = carrinhoItems.findIndex(
+                (item) => item.nome === nome
+              );
+              if (index >= 0) {
+                carrinhoItems.splice(index, 1);
+                setStatus(`✔️ ${nome} removido!`, "sucesso");
+              }
+            }
+            atualizarCarrinho();
+            renderizarCarrinhoModal();
+          } else {
+            setStatus(`❌ ${dados.mensagem || "Ação não confirmada"}`, "erro");
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus("❌ Erro de conexão com a API", "erro");
+        }
+      }
+
+      function renderizarCarrinhoModal() {
+        const resumo = {};
+        carrinhoItems.forEach((item) => {
+          if (!resumo[item.nome]) {
+            resumo[item.nome] = { ...item, quantidade: 0 };
+          }
+          resumo[item.nome].quantidade++;
+        });
+
+        const linhas = Object.values(resumo).map(
+          (item) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+      <span>${item.nome}</span>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button onclick="alterarQuantidade('${
+          item.nome
+        }', -1)" style="padding:4px 8px; background:#eee; border:none; border-radius:6px; cursor:pointer;">−</button>
+        <span>${item.quantidade}</span>
+        <button onclick="alterarQuantidade('${
+          item.nome
+        }', 1)" style="padding:4px 8px; background:#eee; border:none; border-radius:6px; cursor:pointer;">＋</button>
+        <span style="font-weight:600;">R$ ${(
+          item.preco * item.quantidade
+        ).toFixed(2)}</span>
+      </div>
+    </div>
+  `
+        );
+
+        listaCarrinho.innerHTML = linhas.length
+          ? linhas.join("")
+          : '<p style="color:var(--text-secondary)">Nenhum item no carrinho.</p>';
+
+        const total = carrinhoItems.reduce((sum, item) => sum + item.preco, 0);
+        totalCarrinhoModal.textContent = `R$ ${total.toFixed(2)}`;
+      }
+
+      document
+        .getElementById("carrinho")
+        .addEventListener("click", abrirCarrinho);
+
+      function setStatus(msg, tipo = "info") {
+        if (activeTimeout) {
+          clearTimeout(activeTimeout);
+        }
+
+        statusDiv.textContent = msg;
+        statusDiv.className = tipo;
+        statusDiv.classList.add("visible");
+
+        activeTimeout = setTimeout(() => {
+          statusDiv.classList.remove("visible");
+        }, 3000);
+      }
+
+      async function enviarAcao(nome, acao) {
+        const button = event.target;
+        const produto = button.closest(".produto");
+        const produtoData = produtos.find((p) => p.nome === nome);
+
+        button.disabled = true;
+        produto.classList.add("loading");
+
+        setStatus(`Adicionando ${nome} ao carrinho...`);
+
+        try {
+          const res = await fetch(
+            `${backendUrl}/carrinho/${carrinhoId}/produto`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ nome, acao, quantidade: 1 }),
+            }
+          );
+
+          const dados = await res.json();
+
+          console.log(dados);
+
+          if (dados.status === "confirmado") {
+            carrinhoItems.push(produtoData);
+            atualizarCarrinho();
+            setStatus(`✔️ ${nome} adicionado ao carrinho!`, "sucesso");
+          } else {
+            setStatus(`❌ ${dados.mensagem}`, "erro");
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus("❌ Erro ao adicionar ao carrinho", "erro");
+        } finally {
+          button.disabled = false;
+          produto.classList.remove("loading");
+        }
+      }
+
+      // Inicialização
+      renderizarProdutos();
+    </script>
+  </body>
+</html>
